@@ -11,9 +11,16 @@
             <meta http-equiv="Expires" content="-1">
         <![endif]-->
         <title>老爹羊肉爐</title>
-        <meta name="description" content="">
+        <meta name="description" content="內湖羊肉爐首選，老爹羊肉爐 電話：02-8791-2018 地址：台灣台北市內湖區成功路二段185號">
         <meta name="viewport" content="width=device-width">
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+        <meta name="keywords" content="羊肉爐,內湖,成功路二段,老爹羊肉爐">
+        <meta property="og:title" content="老爹羊肉爐">
+        <meta property="og:url" content="http://www.olddaddy.com.tw">
+        <meta property="og:image" content="http://www.olddaddy.com.tw/img/logo_background_250_extrasmall.png">
+        <meta property="og:description" content="內湖羊肉爐首選，老爹羊肉爐 電話：02-8791-2018 地址：台灣台北市內湖區成功路二段185號">
+        <meta property="og:site_name" content="老爹羊肉爐">
+        <meta property="og:type" content="product">
 
         <!-- Font Awesome -->
         <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
@@ -208,29 +215,10 @@
             </div>
         </div>
         <div class="row news-group">
-            <div class="container">
+            <div class="container js-news">
                 <div class="col-md-12 banner">
                     <hr/>
                     <h3 class="">最新消息</h3>
-                </div>
-                <div class="col-md-4">
-                    <h3 class="title">2/23</h3>
-                    <div class="body">今天晚上天氣真是不錯呢！沒雨又涼爽的天氣，待再家裡真是太浪費了啦！快約三五好友一起來老爹羊肉爐打牙祭吧！</div>
-                </div>
-                <div class="col-md-4">
-                    <h3 class="title">2/14</h3>
-                    <div class="body">寒流來襲～今天你要過"元宵節"還是"情人節"？來老爹羊肉爐～讓我們請你吃巧克力吧！</div>
-                </div>
-                <div class="col-md-4">
-                    <h3 class="title">2/11</h3>
-                    <div class="body">
-                        外頭濕濕冷冷<br>
-                        朋友們 要做好保暖喲<br>
-                        趕緊相約三五好友<br>
-                        一同來<br>
-                        老爹羊肉爐<br>
-                        品嘗一鍋暖呼呼的羊肉爐吧<br>
-                    </div>
                 </div>
             </div>
         </div>
@@ -273,9 +261,44 @@
             ga('send', 'pageview');
         </script>
         <script type="text/javascript">
-            $('.js-carousel').carousel({
-                interval: 5000,
-                pause: 'hover',
+            $(function(){
+                var _pageId = '137354593122461',
+                    _token = '225693810960298|iBoI7b-nLRwMpAWMhfMy1y4g71g',
+                    _feedUrl = 'https://graph.facebook.com/' + _pageId + '/feed?access_token=' + _token,
+                    $carousel = $('.js-carousel'),
+                    $news = $('.js-news'),
+                    newsCount = 3,
+                    newsTemplate = function(title, body) {
+                        return '<div class="col-md-4">' +
+                            '<h3 class="title">' + title + '</h3>' +
+                            '<div class="body">' + body + '</div>' +
+                        '</div>';
+                    };
+
+                $carousel.carousel({
+                    interval: 5000,
+                    pause: 'hover',
+                });
+
+                $.get(_feedUrl).done(function(res) {
+                    var result = [];
+                    for(var i = 0; i < res.data.length; i++) {
+                        var _d = res.data[i],
+                            _time = new Date(_d.updated_time),
+                            _title = _time.getMonth() + '/' + _time.getDate(),
+                            _body = _d.message,
+                            _template = '';
+
+                        if(_title && _body && result.length < newsCount) {
+                            _template = newsTemplate(_title, _body);
+                            result.push(_template);
+                        }
+                    }
+
+                    for(var j = 0; j < result.length; j++) {
+                        $news.append(result[j]);
+                    };
+                });
             });
         </script>
     </body>
